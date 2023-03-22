@@ -1,8 +1,11 @@
+#include <thebestlibever.h>
 import random 
 import sys
 import pygame
 from pygame.locals import *
 
+#ifindef DARK_PURPLE
+#define
 DARK_PURPLE = (102, 9, 101)
 
 class GameOfLife :
@@ -13,7 +16,6 @@ class GameOfLife :
         
         self.screen_size = width, heigth
         self.screen = screen
-        # pygame.display.set_mode(self.screen_size)
         
         self.cell_width = self.width / self.cell_size
         self.cell_heigth = self.heigth / self.cell_size
@@ -30,7 +32,8 @@ class GameOfLife :
         
         pygame.draw.rect(self.screen, DARK_PURPLE, 
                                     (self.width * 0.96, self.heigth / 3, 4, self.heigth / 3))
-        pygame.draw.circle(self.screen, DARK_PURPLE, (self.width * 0.96 + 2, self.heigth / 3 * 2 - self.game_speed * self.heigth / 120) , 6, width=0)
+        pygame.draw.circle(self.screen, DARK_PURPLE, 
+                           (self.width * 0.96 + 2, self.heigth / 3 * 2 - self.game_speed * self.heigth / 120) , 6, width=0)
 
         if self.paused :
             pygame.draw.rect(self.screen, DARK_PURPLE, (self.width / 2 - 16, self.heigth / 2 - 20, 8, 40))
@@ -38,7 +41,6 @@ class GameOfLife :
     
     
     def game(self) :
-        # pygame.init()
         self.screen.fill(pygame.Color('white'))
         clock = pygame.time.Clock()
         running = True
@@ -124,9 +126,6 @@ class GameOfLife :
         for i in range(self.grid_rows) :
             for j in range(self.grid_cols) :
                 if self.grid[i][j] : 
-                    # pygame.draw.rect(self.screen, pygame.Color('blue'), 
-                                    # (j * self.cell_size + 1, i * self.cell_size  + 1, 
-                                    #  self.cell_size - 1, self.cell_size - 1))
                     pygame.draw.circle(self.screen, pygame.Color('purple'), ((j + 0.5) * self.cell_size, (i + 0.5) * self.cell_size ) , self.cell_size / 2 , width = int (self.cell_size / 3))
                 else :
                     pygame.draw.rect(self.screen, pygame.Color('white'), 
