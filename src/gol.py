@@ -45,7 +45,7 @@ class GameOfLife :
         clock = pygame.time.Clock()
         running = True
         self.paused = False
-        self.create_grid(1)
+        self.create_grid()
         while running :
             for event in pygame.event.get() :
                 if event.type == QUIT :
@@ -146,39 +146,51 @@ class GUI :
     def main_menu (self) :
         pygame.init()
         pygame.display.set_caption("Game Of Life")
-        self.screen.fill(pygame.Color('white'))
+        self.screen.fill((224, 176, 255))
         running = True
         clock = pygame.time.Clock()
-        game = GameOfLife(self.screen, 900, 600, 20)
+        game = GameOfLife(self.screen, self.width, self.heigth, 20)
         game_start = False
+        options = False
         select = 0 
+        pygame.mixer.music.load('./sounds/clouds.mp3')
+        pygame.mixer.music.play()
         while running :
-            for event in pygame.event.get() :
-                if event.type == QUIT :
-                    running = False
-                if event.type == MOUSEMOTION :
-                    x, y = event.pos
-                    if (self.width / 3 < x < 2 / 3 * self.width) \
-                        and (self.heigth / 2 < y < self.heigth / 2 + self.heigth / 10) :
-                        select = 1 
-                    elif (self.width / 3 < x < 2 / 3 * self.width) \
-                        and (self.heigth / 2 +  self.heigth / 7 < y < self.heigth / 2 +  self.heigth / 7 + self.heigth / 10) :
-                        select = 2
-                    elif (self.width / 2 - self.width / 12 < x < self.width / 2 + self.width / 12) \
-                        and (self.heigth / 2 + 2 * self.heigth / 7 < y < self.heigth / 2 + 2 * self.heigth / 7 + self.heigth / 10) :
-                        select = 3
-                    else :
-                        select = 0
-                if event.type == MOUSEBUTTONDOWN :
-                    if event.button == 1 :
-                        if select == 1 :
-                            running = False
-                            game_start = True
-                        elif select == 2 :
-                            pass
-                        elif select == 3:
-                            sys.exit()
-            self.draw_main_menu(select)
+            if options : 
+                for event in pygame.event.get() :
+                    if event.type == QUIT :
+                        sys.exit()
+                    if event.type == MOUSEMOTION :
+                        x, y = event.pos
+                        
+                self.draw_options_menu()
+            else :
+                for event in pygame.event.get() :
+                    if event.type == QUIT :
+                        running = False
+                    if event.type == MOUSEMOTION :
+                        x, y = event.pos
+                        if (self.width / 3 < x < 2 / 3 * self.width) \
+                            and (self.heigth / 2 < y < self.heigth / 2 + self.heigth / 10) :
+                            select = 1 
+                        elif (self.width / 3 < x < 2 / 3 * self.width) \
+                            and (self.heigth / 2 +  self.heigth / 7 < y < self.heigth / 2 +  self.heigth / 7 + self.heigth / 10) :
+                            select = 2
+                        elif (self.width / 2 - self.width / 12 < x < self.width / 2 + self.width / 12) \
+                            and (self.heigth / 2 + 2 * self.heigth / 7 < y < self.heigth / 2 + 2 * self.heigth / 7 + self.heigth / 10) :
+                            select = 3
+                        else :
+                            select = 0
+                    if event.type == MOUSEBUTTONDOWN :
+                        if event.button == 1 :
+                            if select == 1 :
+                                running = False
+                                game_start = True
+                            elif select == 2 :
+                                options = True
+                            elif select == 3:
+                                sys.exit()
+                self.draw_main_menu(select)
             pygame.display.flip()
             clock.tick(60)
         if game_start :
@@ -186,6 +198,10 @@ class GUI :
 
     
     def draw_main_menu(self, select) :
+        logo = pygame.image.load('./images/logo1.png')
+        logo_rect = logo.get_rect()
+        logo_rect.center=(self.width / 2, self.heigth / 5 - 10)
+        self.screen.blit(logo, logo_rect)
         pygame.draw.rect(self.screen, pygame.Color('purple'), (self.width / 3, self.heigth / 2, self.width / 3, self.heigth / 10  ))
         pygame.draw.rect(self.screen, pygame.Color('purple'), (self.width / 3, self.heigth / 2 +  self.heigth / 7, self.width / 3, self.heigth / 10  ))
         pygame.draw.rect(self.screen, pygame.Color('purple'), (self.width * 5 / 12, self.heigth / 2  + 2 * self.heigth / 7 , self.width / 6, self.heigth / 10  ))
@@ -205,7 +221,7 @@ class GUI :
         exit_text = font.render('Exit', True, (72, 50, 72))
         
         gol_text_rect = gol_text.get_rect()
-        gol_text_rect.center = (self.width / 2, self.heigth / 3 + self.heigth / 20 )
+        gol_text_rect.center = (self.width / 2, self.heigth / 3 + self.heigth / 13 )
         new_game_text_rect = new_game_text.get_rect()
         new_game_text_rect.center = (self.width / 2, self.heigth / 2 + self.heigth / 20)
         settings_text_rect = settings_text.get_rect()
@@ -219,8 +235,10 @@ class GUI :
         self.screen.blit(exit_text, exit_text_rect)
         
 
+    def draw_options_menu(self) :
+        pass
 
-gui = GUI(900, 600)
+gui = GUI(800, 600)
 gui.main_menu()
 
 
